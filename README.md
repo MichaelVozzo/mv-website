@@ -23,8 +23,5 @@ This file relies on the following dependencies:
 * `lucide-react`: For icons.
 * `shadcn-ui`: For theming. 
 * `next/link`: For internal navigation.
-*  Custom components: `Hero`, `AboutMe`, `Posts`, `Button`, `Section`, `Container` (located within the project).
+*  Custom components: `Hero`, `AboutMe`, `Posts`, `Button`, `Section`, `Container`, `BeforeAfterSlider`, `Breadcrumbs`, `Navbar` (located within the project).
 *  Custom API functions: `getPosts`, `getProjects`, `getTags` (located in `lib/api`).
-
-
-This README provides a high-level overview of the `page.tsx` file. For detailed implementation, refer to the code itself and the individual component files.
