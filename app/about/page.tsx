@@ -108,7 +108,7 @@ export default function About() {
                       </li>
                       <li className="flex items-center gap-2">
                         <Badge className="h-2 w-2 rounded-full p-0" />
-                        WooCommerce Customization
+                        WooCommerce Customisation
                       </li>
                     </ul>
                   </CardContent>
@@ -154,7 +154,7 @@ export default function About() {
                       </li>
                       <li className="flex items-center gap-2">
                         <Badge className="h-2 w-2 rounded-full p-0" />
-                        SEO Optimization, Google PageSpeed
+                        SEO Optimisation, Google PageSpeed
                       </li>
                       <li className="flex items-center gap-2">
                         <Badge className="h-2 w-2 rounded-full p-0" />
