@@ -20,3 +20,5 @@ export default async function BlogPage() {
     </Section>
   );
 }
+
+export const revalidate = 300;

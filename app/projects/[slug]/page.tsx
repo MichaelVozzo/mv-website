@@ -291,3 +291,5 @@ export async function generateMetadata({ params }: Params) {
       : "Project details",
   };
 }
+
+export const revalidate = 300;

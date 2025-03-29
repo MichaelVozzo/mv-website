@@ -109,3 +109,5 @@ export async function generateMetadata({ params }: Params) {
       .slice(0, 160),
   };
 }
+
+export const revalidate = 300;

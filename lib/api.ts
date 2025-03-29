@@ -22,7 +22,7 @@ export async function getTags(): Promise<Record<number, string>> {
  * Fetch all posts.
  */
 export async function getPosts(): Promise<Post[]> {
-  const res = await fetch(`${BASE_URL}/posts?_embed`, { cache: "no-store" });
+  const res = await fetch(`${BASE_URL}/posts?_embed`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch posts");
@@ -35,7 +35,7 @@ export async function getPosts(): Promise<Post[]> {
  * Fetch all projects.
  */
 export async function getProjects(): Promise<Project[]> {
-  const res = await fetch(`${BASE_URL}/project?_embed`, { cache: "no-store" });
+  const res = await fetch(`${BASE_URL}/project?_embed`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch project");

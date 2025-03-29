@@ -1,8 +1,8 @@
-import { Posts as PostsType } from "@/lib/types";
+import { Posts as PostsType, Project as ProjectType } from "@/lib/types";
 import PostCard from "@/components/PostCard";
 
 interface PostsProps {
-  posts: PostsType[];
+  posts: PostsType[] | ProjectType[];
   tagsMap: Record<number, any>;
   postBasePath: string;
   limit?: number;
