@@ -1,8 +1,20 @@
 // lib/types.ts
+export interface Author {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+  link: string;
+  slug: string;
+}
+
 export interface Post {
   id: number;
   title: { rendered: string };
   excerpt: { rendered: string };
+  content: {
+    rendered: string;
+  };
   slug: string;
   date: string;
   tags?: number[]; // Array of tag IDs
@@ -10,12 +22,54 @@ export interface Post {
     "wp:featuredmedia"?: {
       0: { source_url: string };
     };
+    author?: Author[];
   };
 }
 
 export type Posts = Post[]; // Type alias for an array of posts
 
-/ New type for image data
+// Project type
+export interface Project {
+  id: number;
+  slug: string;
+  date: string;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+  tags: number[];
+  acf: ProjectACF;
+  _embedded?: {
+    "wp:featuredmedia"?: {
+      source_url: string;
+    }[];
+  };
+}
+
+// Project type for static generation
+export interface ProjectACF {
+  short_description: string;
+  live_url: string;
+  situation: string;
+  situation_image: number | null;
+  task: string;
+  task_image: number | null;
+  result: string;
+  results_image: number | null;
+  before_image: number | null;
+  after_image: number | null;
+}
+
+// Tag type
+export interface Tag {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+// New type for image data
 export interface ImageDetails {
   width: number;
   height: number;

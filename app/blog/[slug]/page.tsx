@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getPost, getTags, getPosts } from "@/lib/api"; // Import from utils
+import { getPost, getTags, getPosts } from "@/lib/api";
+import { Post, Tag } from "@/lib/types";
 import TagList from "@/components/TagList";
 
 type Params = {
@@ -12,7 +13,7 @@ type Params = {
 // Function required for static site generation
 export async function generateStaticParams() {
   const posts = await getPosts();
-  return posts.map((post: any) => ({ slug: post.slug }));
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export default async function SinglePostPage({ params }: Params) {
@@ -22,15 +23,21 @@ export default async function SinglePostPage({ params }: Params) {
   }
 
   const [post, tagsMap] = await Promise.all([getPost(fixit.slug), getTags()]);
+  // Type the post variable
+  const typedPost: Post = post;
 
-  if (!post) {
+  if (!typedPost) {
     notFound();
   }
 
   const featuredImageUrl =
-    post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
+    typedPost._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
 
-  const postTags = post.tags?.map((tagId: number) => tagsMap[tagId]) || [];
+  // Type the tagsMap variable
+  const typedTagsMap: Record<number, string> = tagsMap;
+
+  const postTags: string[] =
+    typedPost.tags?.map((tagId: number) => typedTagsMap[tagId]) || [];
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -38,18 +45,18 @@ export default async function SinglePostPage({ params }: Params) {
         <header className="mb-8">
           <h1
             className="text-4xl font-bold mb-4"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+            dangerouslySetInnerHTML={{ __html: typedPost.title.rendered }}
           />
           <div className="flex flex-wrap gap-4 text-gray-600 dark:text-white mb-4">
             <span>
-              {new Date(post.date).toLocaleDateString("en-GB", {
+              {new Date(typedPost.date).toLocaleDateString("en-GB", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
               })}
             </span>
-            {post._embedded?.["author"]?.[0]?.name && (
-              <span>By: {post._embedded["author"][0].name}</span>
+            {typedPost._embedded?.author?.[0]?.name && (
+              <span>By: {typedPost._embedded.author[0].name}</span>
             )}
           </div>
 
@@ -64,7 +71,7 @@ export default async function SinglePostPage({ params }: Params) {
           <div className="mb-8 relative aspect-video">
             <Image
               src={featuredImageUrl}
-              alt={post.title.rendered}
+              alt={typedPost.title.rendered}
               fill
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -76,7 +83,7 @@ export default async function SinglePostPage({ params }: Params) {
 
         <div
           className="prose dark:prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+          dangerouslySetInnerHTML={{ __html: typedPost.content.rendered }}
         />
       </article>
     </div>
@@ -86,8 +93,9 @@ export default async function SinglePostPage({ params }: Params) {
 export async function generateMetadata({ params }: Params) {
   const fixit = await params;
   const post = await getPost(fixit.slug);
+  const typedPost: Post = post;
 
-  if (!post) {
+  if (!typedPost) {
     return {
       title: "Post Not Found",
       description: "The requested post could not be found",
@@ -95,7 +103,9 @@ export async function generateMetadata({ params }: Params) {
   }
 
   return {
-    title: post.title.rendered,
-    description: post.excerpt.rendered.replace(/<[^>]*>/g, "").slice(0, 160),
+    title: typedPost.title.rendered,
+    description: typedPost.excerpt.rendered
+      .replace(/<[^>]*>/g, "")
+      .slice(0, 160),
   };
 }

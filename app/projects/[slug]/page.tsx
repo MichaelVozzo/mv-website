@@ -2,8 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getProjects, getTags, getProject, getImageById } from "@/lib/api";
+import { Project, ProjectACF } from "@/lib/types";
 import TagList from "@/components/TagList";
-import { CalendarIcon, ExternalLink, ChevronRight } from "lucide-react";
+import { CalendarIcon, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/Layout";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
@@ -35,6 +36,9 @@ export default async function SinglePostPage({ params }: Params) {
     getTags(),
   ]);
 
+  // Type the post variable
+  const typedPost: Project = post;
+
   if (!post) {
     notFound();
   }
@@ -58,7 +62,7 @@ export default async function SinglePostPage({ params }: Params) {
     results_image = null,
     before_image = null,
     after_image = null,
-  } = post.acf || {};
+  }: ProjectACF = typedPost.acf || {};
 
   // Get situation/task/results images using the API function
   const [
@@ -151,7 +155,7 @@ export default async function SinglePostPage({ params }: Params) {
       <div className="flex flex-col gap-20 mt-20 md:gap-30 md:mt-30 max-w-6xl mx-auto">
         {/* The Brief/Situation - Image on Right */}
         {situation && (
-          <section className="grid gap-8 md:grid-cols-2 md:gap-12 items-center project-col">
+          <section className="grid gap-8 md:gap-12 items-center project-col">
             <div className="order-2 md:order-1">
               <h2 className="text-2xl font-bold mb-4">The Brief</h2>
               <div className="prose prose-gray dark:prose-invert max-w-none">
@@ -174,9 +178,9 @@ export default async function SinglePostPage({ params }: Params) {
 
         {/* The Solution/Task - Image on Left */}
         {task && (
-          <section className="grid gap-8 md:grid-cols-2 md:gap-12 items-center project-col">
+          <section className="grid gap-8 md:gap-12 items-center project-col">
             {taskImageData && (
-              <div className="rounded-lg overflow-hidden order-2 md:order-2 lg:order-1">
+              <div className="rounded-lg overflow-hidden">
                 <Image
                   src={taskImageData.url || "/placeholder.svg"}
                   alt={taskImageData.alt || "The Solution"}
@@ -186,7 +190,7 @@ export default async function SinglePostPage({ params }: Params) {
                 />
               </div>
             )}
-            <div className="order-1 md:order-2">
+            <div>
               <h2 className="text-2xl font-bold mb-4">The Solution</h2>
               <div className="prose prose-gray dark:prose-invert max-w-none">
                 <div dangerouslySetInnerHTML={{ __html: task }} />
@@ -226,7 +230,7 @@ export default async function SinglePostPage({ params }: Params) {
 
         {/* The Results - Image on Right */}
         {result && (
-          <section className="grid gap-8 md:grid-cols-2 md:gap-12 items-center project-col">
+          <section className="grid gap-8 md:gap-12 items-center project-col">
             <div className="order-2 md:order-1">
               <h2 className="text-2xl font-bold mb-4">The Results</h2>
               <div className="prose dark:prose-invert max-w-none">

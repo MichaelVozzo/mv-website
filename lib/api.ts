@@ -1,10 +1,10 @@
-import { ImageData, ImageReturn } from "./types";
+import { Author, ImageData, ImageReturn, Post, Project, Tag } from "./types";
 const BASE_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
 
 /**
  * Fetch all tags and return a map of tag IDs to tag objects.
  */
-export async function getTags() {
+export async function getTags(): Promise<Record<number, string>> {
   const res = await fetch(`${BASE_URL}/tags`);
 
   if (!res.ok) {
@@ -21,7 +21,7 @@ export async function getTags() {
 /**
  * Fetch all posts.
  */
-export async function getPosts() {
+export async function getPosts(): Promise<Post[]> {
   const res = await fetch(`${BASE_URL}/posts?_embed`, { cache: "no-store" });
 
   if (!res.ok) {
@@ -34,7 +34,7 @@ export async function getPosts() {
 /**
  * Fetch all projects.
  */
-export async function getProjects() {
+export async function getProjects(): Promise<Project[]> {
   const res = await fetch(`${BASE_URL}/project?_embed`, { cache: "no-store" });
 
   if (!res.ok) {
@@ -47,7 +47,7 @@ export async function getProjects() {
 /**
  * Fetch a single post by slug.
  */
-export async function getPost(slug: string) {
+export async function getPost(slug: string): Promise<Post> {
   const res = await fetch(`${BASE_URL}/posts?slug=${slug}&_embed`);
 
   if (!res.ok) {
@@ -61,7 +61,7 @@ export async function getPost(slug: string) {
 /**
  * Fetch a single project by slug.
  */
-export async function getProject(slug: string) {
+export async function getProject(slug: string): Promise<Project> {
   const res = await fetch(`${BASE_URL}/project?slug=${slug}&_embed`);
 
   if (!res.ok) {
