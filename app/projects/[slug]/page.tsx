@@ -9,15 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/Layout";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import Breadcrumbs from "@/components/BreadCrumbs";
-import { Metadata } from "next";
 
-// More specific type for params
-type PageParams = {
-  slug: string;
-};
-
-type Props = {
-  params: PageParams;
+// Define the params type
+type Params = {
+  params: {
+    slug: string;
+  };
 };
 
 // Function required for static site generation
@@ -28,30 +25,30 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function SinglePostPage({ params }: Props) {
-  // No need to await params
-  if (!params?.slug) {
+export default async function SinglePostPage({ params }: Params) {
+  const fixit = await params;
+  if (!fixit?.slug) {
     return notFound(); // Handle case where params is missing
   }
 
   const [post, tagsMap] = await Promise.all([
-    getProject(params.slug), // Use params.slug directly
+    getProject(fixit.slug),
     getTags(),
   ]);
 
   // Type the post variable
   const typedPost: Project = post;
 
-  if (!typedPost) {
+  if (!post) {
     notFound();
   }
 
   // Get the featured image URL from the _embedded data
   const featuredImageUrl =
-    typedPost._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
+    post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
 
   // Get tag names for this post
-  const postTags = typedPost.tags?.map((tagId: number) => tagsMap[tagId]) || [];
+  const postTags = post.tags?.map((tagId: number) => tagsMap[tagId]) || [];
 
   // Extract ACF fields
   const {
@@ -82,13 +79,12 @@ export default async function SinglePostPage({ params }: Props) {
     after_image ? getImageById(after_image) : null,
   ]);
 
+  console.log(situationImageData);
+
   return (
     <Container className="py-12">
       {/* Breadcrumbs */}
-      <Breadcrumbs
-        projectTitle={typedPost.title.rendered}
-        parentUrl="/projects"
-      />
+      <Breadcrumbs projectTitle={post.title.rendered} parentUrl="/projects" />
 
       {/* Hero Section */}
       <div className="mb-16">
@@ -98,7 +94,7 @@ export default async function SinglePostPage({ params }: Props) {
             <div className="flex rounded-lg overflow-hidden">
               <Image
                 src={featuredImageUrl || "/placeholder.svg"}
-                alt={typedPost.title.rendered}
+                alt={post.title.rendered}
                 width={1200}
                 height={800}
                 className="w-full h-auto object-cover"
@@ -112,7 +108,7 @@ export default async function SinglePostPage({ params }: Props) {
             <div className="space-y-4">
               <h1
                 className="text-4xl font-bold tracking-tight md:text-5xl"
-                dangerouslySetInnerHTML={{ __html: typedPost.title.rendered }}
+                dangerouslySetInnerHTML={{ __html: post.title.rendered }}
               />
 
               <div className="flex flex-col gap-4">
@@ -120,7 +116,7 @@ export default async function SinglePostPage({ params }: Props) {
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   <span>
                     Completion Date:{" "}
-                    {new Date(typedPost.date).toLocaleDateString("en-GB", {
+                    {new Date(post.date).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "2-digit",
                       year: "numeric",
@@ -257,29 +253,29 @@ export default async function SinglePostPage({ params }: Props) {
       </div>
 
       {/* If there's additional content in the main WordPress content field, display it here */}
-      {typedPost.content.rendered &&
-        typedPost.content.rendered.trim() !== "" && (
-          <div className="mt-16">
-            <div
-              className="prose dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: typedPost.content.rendered }}
-            />
-          </div>
-        )}
+      {post.content.rendered && post.content.rendered.trim() !== "" && (
+        <div className="mt-16">
+          <div
+            className="prose dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+          />
+        </div>
+      )}
     </Container>
   );
 }
 
 // Generate metadata for the post
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  if (!params?.slug) {
+export async function generateMetadata({ params }: Params) {
+  const fixit = await params;
+  if (!fixit?.slug) {
     return {
       title: "Post Not Found",
       description: "The requested post could not be found",
     };
   }
 
-  const post = await getProject(params.slug);
+  const post = await getProject(fixit.slug);
 
   if (!post) {
     return {
