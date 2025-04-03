@@ -36,7 +36,11 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
       <nav className="container flex h-16 items-center mx-auto relative">
         <div className="mr-8">
-          <Link href="/" className="text-xl font-bold">
+          <Link
+            href="/"
+            className="text-xl font-bold"
+            aria-label="Navigate Home"
+          >
             <svg
               width="40"
               height="38"
@@ -79,7 +83,11 @@ export default function Navbar() {
         {/* Mobile Navigation */}
         <div className="flex flex-1 items-center justify-end md:hidden gap-4">
           <ModeToggle className="absolute top-4 left-4" />
-          <button onClick={toggleMobileNav} className="text-foreground">
+          <button
+            onClick={toggleMobileNav}
+            className="text-foreground"
+            aria-label="Open Mobile Navigation"
+          >
             {isMobileNavOpen ? (
               <IoClose size={24} />
             ) : (
@@ -93,6 +101,7 @@ export default function Navbar() {
             <button
               onClick={toggleMobileNav}
               className="absolute top-4 right-4 text-foreground z-999"
+              aria-label="Close Mobile Navigation"
             >
               <IoClose size={30} />
             </button>
