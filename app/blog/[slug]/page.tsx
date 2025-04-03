@@ -3,11 +3,15 @@ import { notFound } from "next/navigation";
 import { getPost, getTags, getPosts } from "@/lib/api";
 import { Post, Tag } from "@/lib/types";
 import TagList from "@/components/TagList";
+import { Metadata, ResolvingMetadata } from "next";
 
-type Params = {
-  params: {
-    slug: string;
-  };
+// More specific type for params
+type PageParams = {
+  slug: string;
+};
+
+type Props = {
+  params: PageParams;
 };
 
 // Function required for static site generation
@@ -16,13 +20,13 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-export default async function SinglePostPage({ params }: Params) {
-  const fixit = await params;
-  if (!fixit?.slug) {
+export default async function SinglePostPage({ params }: Props) {
+  // No need to await params
+  if (!params?.slug) {
     return notFound(); // Handle case where params is missing
   }
 
-  const [post, tagsMap] = await Promise.all([getPost(fixit.slug), getTags()]);
+  const [post, tagsMap] = await Promise.all([getPost(params.slug), getTags()]);
   // Type the post variable
   const typedPost: Post = post;
 
@@ -90,9 +94,9 @@ export default async function SinglePostPage({ params }: Params) {
   );
 }
 
-export async function generateMetadata({ params }: Params) {
-  const fixit = await params;
-  const post = await getPost(fixit.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // No need to await params
+  const post = await getPost(params.slug);
   const typedPost: Post = post;
 
   if (!typedPost) {
