@@ -3,14 +3,20 @@ import { notFound } from "next/navigation";
 import { getPost, getTags, getPosts } from "@/lib/api";
 import { Post, Tag } from "@/lib/types";
 import TagList from "@/components/TagList";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 
 // More specific type for params
 type PageParams = {
   slug: string;
 };
 
-type Props = {
+// Props for the main page component
+type PageProps = {
+  params: PageParams;
+};
+
+// Props specifically for generateMetadata
+type MetadataProps = {
   params: PageParams;
 };
 
@@ -20,7 +26,7 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-export default async function SinglePostPage({ params }: Props) {
+export default async function SinglePostPage({ params }: PageProps) {
   // No need to await params
   if (!params?.slug) {
     return notFound(); // Handle case where params is missing
@@ -94,7 +100,9 @@ export default async function SinglePostPage({ params }: Props) {
   );
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: MetadataProps): Promise<Metadata> {
   // No need to await params
   const post = await getPost(params.slug);
   const typedPost: Post = post;
