@@ -2,6 +2,8 @@ import { MetadataRoute } from "next";
 import { getAllPosts, getProjects } from "@/lib/wordpress";
 import { siteConfig } from "@/site.config";
 
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
   const projects = await getProjects();
