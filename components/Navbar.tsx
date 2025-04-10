@@ -82,7 +82,7 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         <div className="flex flex-1 items-center justify-end md:hidden gap-4">
-          <ModeToggle className="absolute top-4 left-4" />
+          <ModeToggle />
           <button
             onClick={toggleMobileNav}
             className="text-foreground"
