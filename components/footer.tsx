@@ -1,5 +1,3 @@
-import { CardFooter } from "./ui/card";
-
 export default function Footer() {
   return (
     <footer className="w-full border-t">

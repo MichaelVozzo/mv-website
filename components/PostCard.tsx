@@ -1,28 +1,35 @@
 import Link from "next/link";
 import Image from "next/image";
-import TagList from "./TagList";
+
+import { Post } from "@/lib/wordpress.d";
+import { cn } from "@/lib/utils";
+
+import { getFeaturedMediaById, getTagsByPost } from "@/lib/wordpress";
+import { badgeVariants } from "./ui/badge";
 
 type PostCardProps = {
   post: any;
-  tagsMap: Record<number, any>;
   basePath: string; // Add a basePath prop
 };
 
-export default function PostCard({ post, tagsMap, basePath }: PostCardProps) {
-  const featuredImageUrl =
-    post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
-  const postTags = post.tags?.map((tagId: number) => tagsMap[tagId]) || [];
+export default async function PostCard({ post, basePath }: PostCardProps) {
+  const media = post.featured_media
+    ? await getFeaturedMediaById(post.featured_media)
+    : null;
 
   // Construct the link dynamically using basePath
   const postLink = `${basePath}/${post.slug}`;
 
+  // get the tags
+  const tags = await getTagsByPost(post.id);
+
   return (
     <div className="post-card">
       <div className="h-auto bg-gray-200 relative aspect-[3/2]">
-        {featuredImageUrl ? (
+        {media?.source_url ? (
           <Image
-            src={featuredImageUrl}
-            alt={post.title.rendered}
+            src={media.source_url}
+            alt={post.title?.rendered || "Post thumbnail"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{ objectFit: "cover" }}
@@ -49,7 +56,18 @@ export default function PostCard({ post, tagsMap, basePath }: PostCardProps) {
           </Link>
         </h2>
 
-        {postTags.length > 0 && <TagList tags={postTags} />}
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {tags.map((tag) => (
+              <span
+                key={tag.id}
+                className={badgeVariants({ variant: "default" })}
+              >
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        )}
 
         {post.excerpt && (
           <div

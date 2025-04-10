@@ -1,68 +1,112 @@
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
-import { getProjects, getTags, getProject, getImageById } from "@/lib/api";
-import { Project, ProjectACF } from "@/lib/types";
-import TagList from "@/components/TagList";
+import {
+  getProjects,
+  getProjectBySlug,
+  getFeaturedMediaById,
+  getTagsByPost,
+  getImageById,
+} from "@/lib/wordpress";
+import { ProjectACF } from "@/lib/wordpress.d";
 import { CalendarIcon, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/Layout";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import Breadcrumbs from "@/components/BreadCrumbs";
-
-// Define the params type
-type Params = {
-  params: {
-    slug: string;
-  };
-};
+import { siteConfig } from "@/site.config";
+import type { Metadata } from "next";
+import { badgeVariants } from "@/components/ui/badge";
+import { notFound } from "next/navigation";
 
 // Function required for static site generation
 export async function generateStaticParams() {
   const posts = await getProjects();
-  return posts.map((post: any) => ({
+
+  return posts.map((post) => ({
     slug: post.slug,
   }));
 }
 
-export default async function SinglePostPage({ params }: Params) {
-  const fixit = await params;
-  if (!fixit?.slug) {
-    return notFound(); // Handle case where params is missing
+// Generate metadata for the page
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getProjectBySlug(slug);
+
+  if (!post) {
+    return {};
   }
 
-  const [post, tagsMap] = await Promise.all([
-    getProject(fixit.slug),
-    getTags(),
-  ]);
+  // Safely get title
+  const title = post.title.rendered;
+  const shortDesc = (post.acf as ProjectACF)?.short_description ?? "";
+  const description = shortDesc.replace(/<[^>]*>/g, "").trim();
 
-  // Type the post variable
-  const typedPost: Project = post;
+  const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
+  ogUrl.searchParams.append("title", title);
+  ogUrl.searchParams.append("description", description);
+
+  return {
+    title: title,
+    description: description,
+    openGraph: {
+      title: title,
+      description: description,
+      type: "article",
+      url: `${siteConfig.site_domain}/projects/${post.slug}`,
+      images: [
+        {
+          url: ogUrl.toString(),
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: title,
+      description: description,
+      images: [ogUrl.toString()],
+    },
+  };
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = await getProjectBySlug(slug);
 
   if (!post) {
     notFound();
   }
 
-  // Get the featured image URL from the _embedded data
-  const featuredImageUrl =
-    post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
+  const featuredMedia = post.featured_media
+    ? await getFeaturedMediaById(post.featured_media)
+    : null;
 
-  // Get tag names for this post
-  const postTags = post.tags?.map((tagId: number) => tagsMap[tagId]) || [];
+  const tags = await getTagsByPost(post.id);
 
   // Extract ACF fields
+  const acf = (post.acf || {}) as ProjectACF;
   const {
-    short_description = "",
+    short_description = "", // Use default values
     live_url = "",
     situation = "",
-    situation_image = null,
+    situation_image = null, // Keep null default for image IDs
     task = "",
     task_image = null,
     result = "",
     results_image = null,
     before_image = null,
     after_image = null,
-  }: ProjectACF = typedPost.acf || {};
+  } = acf;
 
   // Get situation/task/results images using the API function
   const [
@@ -72,14 +116,12 @@ export default async function SinglePostPage({ params }: Params) {
     beforeImageData,
     afterImageData,
   ] = await Promise.all([
-    situation_image ? getImageById(situation_image) : null,
-    task_image ? getImageById(task_image) : null,
-    results_image ? getImageById(results_image) : null,
-    before_image ? getImageById(before_image) : null,
-    after_image ? getImageById(after_image) : null,
+    situation_image ? getImageById(situation_image) : Promise.resolve(null),
+    task_image ? getImageById(task_image) : Promise.resolve(null),
+    results_image ? getImageById(results_image) : Promise.resolve(null),
+    before_image ? getImageById(before_image) : Promise.resolve(null),
+    after_image ? getImageById(after_image) : Promise.resolve(null),
   ]);
-
-  console.log(situationImageData);
 
   return (
     <Container className="py-12">
@@ -90,11 +132,11 @@ export default async function SinglePostPage({ params }: Params) {
       <div className="mb-16">
         <div className="grid gap-8 md:grid-cols-2 md:gap-12">
           {/* Featured Image - Left Column */}
-          {featuredImageUrl && (
+          {featuredMedia?.source_url && (
             <div className="flex rounded-lg overflow-hidden">
               <Image
-                src={featuredImageUrl || "/placeholder.svg"}
-                alt={post.title.rendered}
+                src={featuredMedia.source_url || "/placeholder.svg"}
+                alt={post.title.rendered || "Project Image"}
                 width={1200}
                 height={800}
                 className="w-full h-auto object-cover"
@@ -123,7 +165,18 @@ export default async function SinglePostPage({ params }: Params) {
                     })}
                   </span>
                 </div>
-                {postTags.length > 0 && <TagList tags={postTags} />}
+                {tags && tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {tags.map((tag) => (
+                      <span
+                        key={tag.id}
+                        className={badgeVariants({ variant: "default" })}
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -264,32 +317,3 @@ export default async function SinglePostPage({ params }: Params) {
     </Container>
   );
 }
-
-// Generate metadata for the post
-export async function generateMetadata({ params }: Params) {
-  const fixit = await params;
-  if (!fixit?.slug) {
-    return {
-      title: "Post Not Found",
-      description: "The requested post could not be found",
-    };
-  }
-
-  const post = await getProject(fixit.slug);
-
-  if (!post) {
-    return {
-      title: "Post Not Found",
-      description: "The requested post could not be found",
-    };
-  }
-
-  return {
-    title: post.title.rendered,
-    description: post.acf.short_description
-      ? post.acf.short_description.replace(/<[^>]*>/g, "").slice(0, 160)
-      : "Project details",
-  };
-}
-
-export const revalidate = 300;

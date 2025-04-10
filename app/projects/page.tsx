@@ -1,9 +1,24 @@
-import { getProjects, getTags } from "@/lib/api";
+import { getProjects } from "@/lib/wordpress";
 import PostCard from "@/components/PostCard";
 import { Container, Section } from "@/components/Layout";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Latest Projects | Michael Vozzo",
+  description:
+    "Browse my latest projects and see how I help clients acheive their digital goal.",
+};
+
+export const dynamic = "auto";
+export const revalidate = 600;
 
 export default async function ProjectPage() {
-  const [posts, tagsMap] = await Promise.all([getProjects(), getTags()]);
+  let posts: any[] = [];
+  try {
+    posts = await getProjects();
+  } catch (error) {
+    console.error("Failed to fetch projects:", error);
+  }
 
   return (
     <Section>
@@ -17,7 +32,7 @@ export default async function ProjectPage() {
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post: any) => (
             <li key={post.id}>
-              <PostCard post={post} tagsMap={tagsMap} basePath="/projects" />
+              <PostCard post={post} basePath="/projects" />
             </li>
           ))}
         </ul>
@@ -25,5 +40,3 @@ export default async function ProjectPage() {
     </Section>
   );
 }
-
-export const revalidate = 300;

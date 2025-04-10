@@ -1,43 +1,88 @@
 import Image from "next/image";
-import { notFound } from "next/navigation";
-import { getPost, getTags, getPosts } from "@/lib/api";
-import { Post, Tag } from "@/lib/types";
-import TagList from "@/components/TagList";
-
-type Params = {
-  params: {
-    slug: string;
-  };
-};
+import {
+  getPostBySlug,
+  getFeaturedMediaById,
+  getAuthorById,
+  getAllPosts,
+  getTagsByPost,
+} from "@/lib/wordpress";
+import { badgeVariants } from "@/components/ui/badge";
+import { siteConfig } from "@/site.config";
+import type { Metadata } from "next";
 
 // Function required for static site generation
 export async function generateStaticParams() {
-  const posts = await getPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+  const posts = await getAllPosts();
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }
 
-export default async function SinglePostPage({ params }: Params) {
-  const fixit = await params;
-  if (!fixit?.slug) {
-    return notFound(); // Handle case where params is missing
+// Generate metadata for the page
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+
+  if (!post) {
+    return {};
   }
 
-  const [post, tagsMap] = await Promise.all([getPost(fixit.slug), getTags()]);
-  // Type the post variable
-  const typedPost: Post = post;
+  const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
+  ogUrl.searchParams.append("title", post.title.rendered);
+  // Strip HTML tags for description
+  const description = post.excerpt.rendered.replace(/<[^>]*>/g, "").trim();
+  ogUrl.searchParams.append("description", description);
 
-  if (!typedPost) {
-    notFound();
-  }
+  return {
+    title: post.title.rendered,
+    description: description,
+    openGraph: {
+      title: post.title.rendered,
+      description: description,
+      type: "article",
+      url: `${siteConfig.site_domain}/posts/${post.slug}`,
+      images: [
+        {
+          url: ogUrl.toString(),
+          width: 1200,
+          height: 630,
+          alt: post.title.rendered,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title.rendered,
+      description: description,
+      images: [ogUrl.toString()],
+    },
+  };
+}
 
-  const featuredImageUrl =
-    typedPost._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
+// Single post page
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  const featuredMedia = post.featured_media
+    ? await getFeaturedMediaById(post.featured_media)
+    : null;
+  const author = await getAuthorById(post.author);
+  const date = new Date(post.date).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
-  // Type the tagsMap variable
-  const typedTagsMap: Record<number, string> = tagsMap;
-
-  const postTags: string[] =
-    typedPost.tags?.map((tagId: number) => typedTagsMap[tagId]) || [];
+  const tags = await getTagsByPost(post.id);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -45,33 +90,32 @@ export default async function SinglePostPage({ params }: Params) {
         <header className="mb-8">
           <h1
             className="text-4xl font-bold mb-4"
-            dangerouslySetInnerHTML={{ __html: typedPost.title.rendered }}
+            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
           />
           <div className="flex flex-wrap gap-4 text-gray-600 dark:text-white mb-4">
-            <span>
-              {new Date(typedPost.date).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
-            </span>
-            {typedPost._embedded?.author?.[0]?.name && (
-              <span>By: {typedPost._embedded.author[0].name}</span>
-            )}
+            <span>Published {date}</span>
+            <span>By: {author.name}</span>
           </div>
 
-          {postTags.length > 0 && (
+          {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-2">
-              <TagList tags={postTags} />
+              {tags.map((tag) => (
+                <span
+                  key={tag.id}
+                  className={badgeVariants({ variant: "default" })}
+                >
+                  {tag.name}
+                </span>
+              ))}
             </div>
           )}
         </header>
 
-        {featuredImageUrl && (
+        {featuredMedia?.source_url && (
           <div className="mb-8 relative aspect-video">
             <Image
-              src={featuredImageUrl}
-              alt={typedPost.title.rendered}
+              src={featuredMedia.source_url}
+              alt={post.title.rendered}
               fill
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -83,31 +127,9 @@ export default async function SinglePostPage({ params }: Params) {
 
         <div
           className="prose dark:prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: typedPost.content.rendered }}
+          dangerouslySetInnerHTML={{ __html: post.content.rendered }}
         />
       </article>
     </div>
   );
 }
-
-export async function generateMetadata({ params }: Params) {
-  const fixit = await params;
-  const post = await getPost(fixit.slug);
-  const typedPost: Post = post;
-
-  if (!typedPost) {
-    return {
-      title: "Post Not Found",
-      description: "The requested post could not be found",
-    };
-  }
-
-  return {
-    title: typedPost.title.rendered,
-    description: typedPost.excerpt.rendered
-      .replace(/<[^>]*>/g, "")
-      .slice(0, 160),
-  };
-}
-
-export const revalidate = 300;

@@ -2,6 +2,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Michael Vozzo | Web Developer in Adelaide",
+  description:
+    "Learn more about Michael Vozzo, professional experience, values, and what drives their work.",
+};
 
 export default function About() {
   return (
