@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description: "Personal portfolio website showcasing my work and experience",
 };
 
+//Revalidate content every 1 hour
+export const revalidate = 3600;
+
 export default function RootLayout({
   children,
 }: {
