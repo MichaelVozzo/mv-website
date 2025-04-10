@@ -1,6 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import profilePic2 from "/public/images/mv-home-shot-2.webp";
+import linkedinLogo from "/public/images/techologies/Linkedin.svg";
+import githubLight from "/public/images/techologies/Github_light.svg";
+import githubDark from "/public/images/techologies/Github_dark.svg";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container, Section } from "@/components/Layout";
@@ -37,7 +40,7 @@ export default function Hero() {
                 rel="noopener noreferrer"
               >
                 <Image
-                  src="images/techologies/Linkedin.svg"
+                  src={linkedinLogo}
                   alt="Michael's Linkedin Profile Link"
                   className="object-contain"
                   width={30}
@@ -52,7 +55,7 @@ export default function Hero() {
                 rel="noopener noreferrer"
               >
                 <Image
-                  src="images/techologies/Github_light.svg"
+                  src={githubLight}
                   alt="Michael's Github Profile Link"
                   className="object-contain dark:hidden"
                   width={30}
@@ -67,7 +70,7 @@ export default function Hero() {
                 rel="noopener noreferrer"
               >
                 <Image
-                  src="images/techologies/Github_dark.svg"
+                  src={githubDark}
                   alt="Michael's Github Profile Link"
                   className="object-contain hidden dark:block"
                   width={30}

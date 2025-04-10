@@ -1,85 +1,101 @@
+import ReactLight from "/public/images/techologies/React_light.svg";
+import ReactDark from "/public/images/techologies/React_dark.svg";
+import NextJsLight from "/public/images/techologies/Next_js_light.svg";
+import NextJsDark from "/public/images/techologies/Next_js_dark.svg";
+import PhpLight from "/public/images/techologies/Php_light.svg";
+import PhpDark from "/public/images/techologies/Php_dark.svg";
+import TypeScript from "/public/images/techologies/TypeScript.svg";
+import Postgres from "/public/images/techologies/PostgreSQL.svg";
+import WordPress from "/public/images/techologies/WordPress.svg";
+import MySQL from "/public/images/techologies/MySQL.svg";
+import TailwindCSS from "/public/images/techologies/tailwindcss.svg";
+import GraphQL from "/public/images/techologies/GraphQL.svg";
+import Docker from "/public/images/techologies/Docker.svg";
+import Cloudflare from "/public/images/techologies/cloudflare.svg";
+import Git from "/public/images/techologies/Git.svg";
+
 // Logos Grid Data Array
 export const technologies = [
   {
     name: "React",
-    imageLight: "images/techologies/React_light.svg",
-    imageDark: "images/techologies/React_dark.svg",
+    imageLight: ReactLight,
+    imageDark: ReactDark,
     width: 40,
     height: 40,
   },
   {
     name: "Next.js",
-    imageLight: "images/techologies/Next_js_light.svg",
-    imageDark: "images/techologies/Next_js_dark.svg",
+    imageLight: NextJsLight,
+    imageDark: NextJsDark,
     width: 85,
     height: 40,
   },
   {
     name: "TypeScript",
-    imageLight: "images/techologies/TypeScript.svg",
+    imageLight: TypeScript,
     imageDark: "",
     width: 40,
     height: 40,
   },
   {
     name: "PostgreSQL",
-    imageLight: "images/techologies/PostgreSQL.svg",
+    imageLight: Postgres,
     imageDark: "",
     width: 40,
     height: 40,
   },
   {
     name: "WordPress",
-    imageLight: "images/techologies/WordPress.svg",
+    imageLight: WordPress,
     imageDark: "",
     width: 40,
     height: 40,
   },
   {
     name: "PHP",
-    imageLight: "images/techologies/Php_light.svg",
-    imageDark: "images/techologies/Php_dark.svg",
+    imageLight: PhpLight,
+    imageDark: PhpDark,
     width: 60,
     height: 40,
   },
   {
     name: "mySQL",
-    imageLight: "images/techologies/MySQL.svg",
+    imageLight: MySQL,
     imageDark: "",
     width: 40,
     height: 40,
   },
   {
     name: "Tailwind CSS",
-    imageLight: "images/techologies/tailwindcss.svg",
+    imageLight: TailwindCSS,
     imageDark: "",
     width: 40,
     height: 40,
   },
   {
     name: "GraphQL",
-    imageLight: "images/techologies/GraphQL.svg",
+    imageLight: GraphQL,
     imageDark: "",
     width: 40,
     height: 40,
   },
   {
     name: "Docker",
-    imageLight: "images/techologies/Docker.svg",
+    imageLight: Docker,
     imageDark: "",
     width: 40,
     height: 40,
   },
   {
     name: "Cloudflare",
-    imageLight: "images/techologies/cloudflare.svg",
+    imageLight: Cloudflare,
     imageDark: "",
     width: 50,
     height: 40,
   },
   {
     name: "Git",
-    imageLight: "images/techologies/Git.svg",
+    imageLight: Git,
     imageDark: "",
     width: 40,
     height: 40,
