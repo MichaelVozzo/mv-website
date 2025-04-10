@@ -4,15 +4,15 @@ import NextJsLight from "/public/images/techologies/Next_js_light.svg";
 import NextJsDark from "/public/images/techologies/Next_js_dark.svg";
 import PhpLight from "/public/images/techologies/Php_light.svg";
 import PhpDark from "/public/images/techologies/Php_dark.svg";
-import TypeScript from "/public/images/techologies/TypeScript.svg";
-import Postgres from "/public/images/techologies/PostgreSQL.svg";
-import WordPress from "/public/images/techologies/WordPress.svg";
-import MySQL from "/public/images/techologies/MySQL.svg";
+import TypeScript from "/public/images/techologies/typescript.svg";
+import Postgres from "/public/images/techologies/postgresql.svg";
+import WordPress from "/public/images/techologies/wordpress.svg";
+import MySQL from "/public/images/techologies/mysql.svg";
 import TailwindCSS from "/public/images/techologies/tailwindcss.svg";
-import GraphQL from "/public/images/techologies/GraphQL.svg";
-import Docker from "/public/images/techologies/Docker.svg";
+import GraphQL from "/public/images/techologies/graphql.svg";
+import Docker from "/public/images/techologies/docker.svg";
 import Cloudflare from "/public/images/techologies/cloudflare.svg";
-import Git from "/public/images/techologies/Git.svg";
+import Git from "/public/images/techologies/git.svg";
 
 // Logos Grid Data Array
 export const technologies = [

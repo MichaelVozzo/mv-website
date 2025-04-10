@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import profilePic2 from "/public/images/mv-home-shot-2.webp";
-import linkedinLogo from "/public/images/techologies/Linkedin.svg";
+import linkedinLogo from "/public/images/techologies/linkedin.svg";
 import githubLight from "/public/images/techologies/Github_light.svg";
 import githubDark from "/public/images/techologies/Github_dark.svg";
 import { ArrowRight } from "lucide-react";
