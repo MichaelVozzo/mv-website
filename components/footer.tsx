@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="w-full border-t">
-      <div className="container mx-auto flex h-16 flex-wrap items-center justify-center md:justify-between">
+      <div className="container mx-auto flex py-6 flex-wrap items-center justify-center md:justify-between">
         <p className="text-sm text-muted-foreground">
           © {new Date().getFullYear()} Michael Vozzo. All rights reserved.
         </p>
