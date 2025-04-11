@@ -11,7 +11,7 @@ import { Container, Section } from "@/components/Layout";
 export default function Hero() {
   return (
     <Section>
-      <Container>
+      <Container className="overflow-x-clip lg:overflow-visible">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
           <div className="flex flex-col space-y-4">
             <h1 className="md:text-xl font-semibold relative rainbow-frame self-start">
