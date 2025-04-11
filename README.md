@@ -1,27 +1,42 @@
-# Michael Vozzo - Portfolio Website
+# Michael Vozzo's Personal Website
 
-This is a headless WordPress site built with Next.js 15. It utilises ACF custom post types to render the content.
+[![Next.js Version](https://img.shields.io/badge/Next.js-^14.x.x-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-^5.x.x-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-^3.x.x-blue?logo=tailwind)](https://tailwindcss.com/)
+[![WordPress](https://img.shields.io/badge/WordPress-^5.x.x-blue?logo=wordpress)](https://wordpress.org/)
 
-## Functionality
+A project built using Next.js and TypeScript, exploring Next JS and Headless WordPress.
 
-The page fetches data for posts and projects using asynchronous functions:
+## Table of Contents
 
-* `getPosts()`: Retrieves blog post data.
-* `getProjects()`: Retrieves project data.
-* `getTags()`: Retrieves tag data for categorization.
+*   [About The Project](#about-the-project)
+*   [Built With](#built-with)
+*   [License](#license)
+*   [Acknowledgements](#acknowledgements)
+
+## About The Project
+
+Exploring Next JS and Headless WordPress. Specifically the REST API. Special thanks to 9d8dev for their started which helped act as the foundation of this project. [9d8dev](https://vercel.com/templates/next.js/nextjs-wordpress-headless-cms)
 
 
-## Data Fetching
+## Built With
 
-The `Promise.all` function ensures that all three data fetching operations (`getPosts`, `getProjects`, `getTags`) are executed concurrently, improving performance.
+This project utilises the following core technologies:
+
+*   [WordPress](https://wordpress.org/)
+*   [Next.js](https://nextjs.org/)
+*   [TypeScript](https://www.typescriptlang.org/)
+*   [Tailwind](https://tailwindcss.com/)
+*   [ShadCN/UI](https://ui.shadcn.com/)
 
 
-## Dependencies
+## License
 
-This file relies on the following dependencies:
+Distributed under the MIT License. See `LICENSE` file for more information.
 
-* `lucide-react`: For icons.
-* `shadcn-ui`: For theming. 
-* `next/link`: For internal navigation.
-*  Custom components: `Hero`, `AboutMe`, `Posts`, `Button`, `Section`, `Container`, `BeforeAfterSlider`, `Breadcrumbs`, `Navbar` (located within the project).
-*  Custom API functions: `getPosts`, `getProjects`, `getTags` (located in `lib/api`).
+## Acknowledgements
+
+*   React Team
+*   Next.js Team / Vercel
+*   [9d8dev](https://vercel.com/templates/next.js/nextjs-wordpress-headless-cms)
+*   WordPress
