@@ -11,7 +11,7 @@ const Breadcrumbs = ({
 }) => {
   return (
     <nav
-      className="flex items-center text-sm text-muted-foreground mb-8 overflow-x-scroll"
+      className="flex items-center text-sm text-muted-foreground mb-8 overflow-x-scroll md:overflow-x-clip"
       aria-label="Breadcrumb"
     >
       <ol className="flex items-center space-x-2">
