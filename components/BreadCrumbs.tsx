@@ -11,7 +11,7 @@ const Breadcrumbs = ({
 }) => {
   return (
     <nav
-      className="flex items-center text-sm text-muted-foreground mb-8"
+      className="flex items-center text-sm text-muted-foreground mb-8 overflow-x-scroll"
       aria-label="Breadcrumb"
     >
       <ol className="flex items-center space-x-2">
@@ -31,7 +31,10 @@ const Breadcrumbs = ({
         </li>
         <li className="flex items-center">
           <ChevronRight className="h-4 w-4 mx-1" />
-          <span className="text-foreground font-medium" aria-current="page">
+          <span
+            className="text-foreground font-medium text-nowrap"
+            aria-current="page"
+          >
             {projectTitle}
           </span>
         </li>

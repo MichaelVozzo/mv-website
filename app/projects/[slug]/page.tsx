@@ -216,7 +216,7 @@ export default async function Page({
               </div>
             </div>
             {situationImageData && (
-              <div className="order-1 md:order-2 rounded-lg overflow-hidden">
+              <div className="order-1 md:order-2 rounded-lg overflow-hidden shadow-xl">
                 <Image
                   src={situationImageData.url || "/placeholder.svg"}
                   alt={situationImageData.alt || "The Brief"}
@@ -233,7 +233,7 @@ export default async function Page({
         {task && (
           <section className="grid gap-8 md:gap-12 items-center project-col">
             {taskImageData && (
-              <div className="rounded-lg overflow-hidden">
+              <div className="rounded-lg overflow-hidden shadow-xl">
                 <Image
                   src={taskImageData.url || "/placeholder.svg"}
                   alt={taskImageData.alt || "The Solution"}
@@ -291,7 +291,7 @@ export default async function Page({
               </div>
             </div>
             {resultsImageData && (
-              <div className="order-1 md:order-2 rounded-lg overflow-hidden">
+              <div className="order-1 md:order-2 rounded-lg overflow-hidden shadow-xl">
                 <Image
                   src={resultsImageData.url || "/placeholder.svg"}
                   alt={resultsImageData.alt || "The Results"}
