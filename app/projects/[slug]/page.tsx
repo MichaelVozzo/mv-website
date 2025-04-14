@@ -205,7 +205,7 @@ export default async function Page({
       </div>
 
       {/* Project Details with Staggered Images */}
-      <div className="flex flex-col gap-20 mt-20 md:gap-30 md:mt-30 max-w-6xl mx-auto">
+      <div className="flex flex-col gap-10 mt-10 md:gap-30 md:mt-30 max-w-6xl mx-auto">
         {/* The Brief/Situation - Image on Right */}
         {situation && (
           <section className="grid gap-8 md:gap-12 items-center project-col">
